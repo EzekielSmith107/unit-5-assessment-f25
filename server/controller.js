@@ -30,6 +30,11 @@ module.exports = {
                 country_id INTEGER REFERENCES countries(country_id)
             );
 
+            INSERT INTO cities (name, rating, country_id)
+            VALUES ('Washington DC', 5, 187),
+            ('Fairfax', 4, 187),
+            ('Charleston', 3, 187);
+
             insert into countries (name)
             values ('Afghanistan'),
             ('Albania'),
@@ -257,6 +262,19 @@ module.exports = {
             FROM cities
                 JOIN countries
                     ON cities.country_id = countries.country_id
+            ORDER BY rating DESC
+        `)
+        .then(dbRes => {
+            res.status(200).send(dbRes[0])
+          })
+          .catch(err => console.log(err))
+    },
+    deleteCity: (req, res) => {
+        let {id} = req.params
+        sequelize.query(`
+            DELETE
+            FROM cities
+            WHERE city_id = ${id}
         `)
         .then(dbRes => {
             res.status(200).send(dbRes[0])

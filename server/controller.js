@@ -1,4 +1,4 @@
-requestAnimationFrame("dotenv").config()
+require("dotenv").config()
 const Sequelize = require("sequelize")
 
 const{CONNECTION_STRING} = process.env
@@ -23,7 +23,12 @@ module.exports = {
                 name varchar
             );
 
-            *****YOUR CODE HERE*****
+            CREATE TABLE cities(
+                city_id SERIAL PRIMARY KEY,
+                name VARCHAR,
+                rating INTEGER,
+                country_id INTEGER REFERENCES countries(country_id)
+            );
 
             insert into countries (name)
             values ('Afghanistan'),
@@ -225,5 +230,14 @@ module.exports = {
             console.log('DB seeded!')
             res.sendStatus(200)
         }).catch(err => console.log('error seeding DB', err))
+    },
+    getCountries: (req, res) => {
+        sequelize.query(`
+            SELECT * FROM countries
+        `)
+        .then(dbRes => {
+            res.status(200).send(dbRes[0])
+          })
+          .catch(err => console.log(err))
     }
-}
+};
